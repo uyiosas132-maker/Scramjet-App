@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bitbucket Math Academy</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+body{font-family:'Inter',sans-serif;margin:0;padding:0;overflow-x:hidden}
+.gaming-theme::-webkit-scrollbar{width:8px}
+.gaming-theme::-webkit-scrollbar-track{background:#111827}
+.gaming-theme::-webkit-scrollbar-thumb{background:#3B82F6;border-radius:4px}
+.neon-card{transition:all .3s ease}
+.neon-card:hover{box-shadow:0 0 20px rgba(59,130,246,.5);transform:translateY(-5px)}
+.nav-link.active{color:#2563eb;border-bottom:2px solid #2563eb}
+</style>
+</head>
+<body class="bg-gray-50 transition-colors duration-300">
+
+<!-- ============ VIEW 1: LEARNING SITE ============ -->
+<div id="edu-view" class="min-h-screen flex flex-col">
+  <nav class="bg-white shadow-md py-4 px-8 flex justify-between items-center">
+    <a href="#home" class="flex items-center" aria-label="Bitbucket Math Academy">
+      <svg class="h-10 w-auto" viewBox="0 0 330 44" xmlns="http://www.w3.org/2000/svg" role="img">
+        <rect x="2" y="4" width="36" height="36" rx="9" fill="#2563eb"/>
+        <path d="M8 24 L12 21 L18 33 L27 10 H35" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="28" y="24" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#fff">x²</text>
+        <text x="48" y="30" font-family="Inter,sans-serif" font-size="21" font-weight="700" fill="#1f2937">Bitbucket <tspan fill="#2563eb">Math Academy</tspan></text>
+      </svg>
+    </a>
+    <div class="space-x-6 text-gray-600 font-medium hidden md:flex" id="edu-nav">
+      <a href="#courses" data-page="courses" class="nav-link pb-1 hover:text-blue-600">Courses</a>
+      <a href="#practice" data-page="practice" class="nav-link pb-1 hover:text-blue-600">Practice</a>
+      <a href="#quadratic" data-page="quadratic" class="nav-link pb-1 hover:text-blue-600">Quadratic Solver</a>
+      <a href="#assignments" data-page="assignments" class="nav-link pb-1 hover:text-blue-600">Assignments</a>
+      <a href="#grades" data-page="grades" class="nav-link pb-1 hover:text-blue-600">Grades</a>
+    </div>
+    <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Student Login</button>
+  </nav>
+
+  <main id="edu-main" class="flex-grow container mx-auto px-4 py-12"></main>
+
+  <footer class="bg-white border-t border-gray-200 py-6 text-center text-gray-500 text-sm">
+    &copy; 2026 Bitbucket Education Systems. All rights reserved.
+  </footer>
+</div>
+
+<!-- ============ VIEW 2: ARCADE (Ctrl+E) ============ -->
+<div id="game-view" class="hidden min-h-screen bg-gray-900 text-white flex flex-col gaming-theme">
+  <nav class="bg-gray-950 border-b border-gray-800 py-4 px-6 flex justify-between items-center sticky top-0 z-50">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.6)]">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 tracking-wider uppercase">Vault Arcade</span>
+    </div>
+    <div class="bg-gray-800 rounded-full px-4 py-1.5 flex items-center space-x-2 border border-gray-700">
+      <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+      <span class="text-sm font-medium text-gray-300">Status: Stealth Active</span>
+    </div>
+  </nav>
+
+  <div class="flex flex-grow overflow-hidden">
+    <aside class="w-64 bg-gray-950 border-r border-gray-800 flex-shrink-0 hidden md:flex flex-col py-6 px-4">
+      <div class="text-xs uppercase text-gray-500 font-bold tracking-wider mb-4 px-2">Categories</div>
+      <ul class="space-y-2" id="cats"></ul>
+      <div class="mt-auto pt-6 border-t border-gray-800">
+        <div class="bg-gray-900 rounded-lg p-4 border border-gray-800">
+          <p class="text-sm text-gray-400 mb-2">Panic Button</p>
+          <p class="text-xs text-gray-500">Press <kbd class="bg-gray-800 px-1 py-0.5 rounded border border-gray-700 text-gray-300">Ctrl</kbd> + <kbd class="bg-gray-800 px-1 py-0.5 rounded border border-gray-700 text-gray-300">E</kbd> to return to study mode instantly.</p>
+        </div>
+      </div>
+    </aside>
+
+    <main id="game-main" class="flex-grow p-6 overflow-y-auto"></main>
+  </div>
+</div>
+
+<script src="/baremux/index.js"></script>
+<script src="/scram/scramjet.all.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+
+/* =====================================================
+   PROXY CONFIG
+   This page must be served by your Scramjet-App server so
+   /sw.js, /scram/, /baremux/, /libcurl/ and /wisp/ exist.
+   ===================================================== */
+const SEARCH_ENGINE = "https://duckduckgo.com/?q=%s";
+
+/* =====================================================
+   LEARNING SITE
+   ===================================================== */
+const COURSES = [
+  {n:'Grade 5 Math', s:'½', c:'green', p:90, d:'Fractions, decimals, volume, and the order of operations.', l:['Adding and subtracting fractions','Multiplying fractions','Decimal place value','Order of operations','Volume of prisms','Coordinate plane']},
+  {n:'Grade 6 Math', s:'3:2', c:'blue', p:80, d:'Ratios, rates, integers, and one-step equations.', l:['Ratios and rates','Unit rates','Dividing fractions','Negative numbers','Expressions and one-step equations','Area and surface area']},
+  {n:'Grade 7 Math', s:'±', c:'orange', p:70, d:'Proportional reasoning, percents, and probability.', l:['Proportional relationships','Percent change and interest','Operations with integers','Two-step equations and inequalities','Angles and scale drawings','Probability']},
+  {n:'Grade 8 Pre-Algebra', s:'y=', c:'yellow', p:60, d:'Linear functions, exponents, and the Pythagorean theorem.', l:['Slope and linear functions','Systems of two equations','Exponent rules and scientific notation','Square and cube roots','Pythagorean theorem','Transformations and scatter plots']},
+  {n:'Grade 9 Algebra I', s:'x²', c:'teal', p:75, d:'Linear and quadratic functions, polynomials, and factoring.', l:['Solving equations and inequalities','Graphing lines','Polynomials','Factoring','Quadratic formula','Exponential growth']},
+  {n:'Grade 10 Geometry', s:'Δ', c:'red', p:40, d:'Proofs, congruence, similarity, circles, and right-triangle trig.', l:['Logic and proof writing','Congruent and similar triangles','Right-triangle trigonometry','Circles, arcs, and chords','Coordinate geometry','Volume and surface area']},
+  {n:'Grade 11 Algebra II & Trig', s:'ax²', c:'purple', p:30, d:'Complex numbers, logarithms, conics, sequences, and trigonometry.', l:['Quadratic formula and complex roots','Polynomial and rational functions','Exponents and logarithms','Sequences and series','Conic sections','Unit circle and trig identities']},
+  {n:'Grade 12 Precalculus & Calculus', s:'∫', c:'indigo', p:10, d:'Limits, derivatives, integrals, matrices, and vectors.', l:['Limits and continuity','Derivatives and the chain rule','Applications of derivatives','Definite integrals','Matrices and determinants','Vectors and parametric equations']}
+];
+const ASSIGNMENTS = [
+  ['Fractions Review','Grade 5','Nov 4'],
+  ['Ratio Word Problems','Grade 6','Nov 5'],
+  ['Slope and Linear Functions','Grade 8','Nov 6'],
+  ['Quadratic Formula Problem Set','Grades 9 and 11','Nov 7'],
+  ['Triangle Proofs','Grade 10','Nov 11'],
+  ['Derivative Worksheet','Grade 12','Nov 14']
+];
+const GRADES = [['Fractions Quiz','Grade 5',96],['Ratios Test','Grade 6',90],['Linear Functions','Grade 8',88],['Quadratics Test','Algebra I',92],['Proofs Quiz','Geometry',85],['Logs and Exponentials','Algebra II',89],['Limits Worksheet','Calculus',95]];
+
+const PAGES = {
+  home: () => `
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Master Mathematics Today</h1>
+      <p class="text-lg text-gray-600">Welcome back! Continue your learning journey with our interactive modules designed to help you excel from fractions in Grade 5 to calculus in Grade 12.</p>
+      <div class="mt-6 p-4 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-md inline-block">
+        <strong>Notice:</strong> Midterm exam preparation materials are now available in the portal.
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      ${COURSES.slice(4,7).map(courseCard).join('')}
+    </div>
+    <div class="mt-12 text-center text-sm text-gray-400">Tip: Use keyboard shortcuts to navigate faster.</div>`,
+
+  courses: () => `
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Courses</h1>
+    <p class="text-gray-600 mb-8">Open a course to see its lessons.</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      ${COURSES.map(c => `
+        <details class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <summary class="cursor-pointer flex items-center gap-4 list-none">
+            <div class="w-12 h-12 bg-${c.c}-100 text-${c.c}-600 rounded-lg flex items-center justify-center text-2xl font-bold shrink-0">${c.s}</div>
+            <div class="flex-grow"><h3 class="text-xl font-semibold text-gray-800">${c.n}</h3><p class="text-gray-600 text-sm">${c.d}</p></div>
+            <span class="text-sm text-gray-500">${c.p}%</span>
+          </summary>
+          <ol class="mt-4 space-y-2 list-decimal list-inside text-gray-700">${c.l.map(x=>`<li>${/Quadratic formula/.test(x)?`<a href="#quadratic" class="text-blue-600 hover:underline">${x}</a>`:x}</li>`).join('')}</ol>
+        </details>`).join('')}
+    </div>`,
+
+  practice: () => `
+    <div class="max-w-xl mx-auto">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Practice</h1>
+      <p class="text-gray-600 mb-6">Pick a topic and solve as many problems as you like.</p>
+      <select id="topic" class="w-full mb-6 border border-gray-300 rounded-md px-3 py-2 bg-white">${TOPICS.map(t=>`<option value="${t[0]}">${t[1]}</option>`).join('')}</select>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <p id="q" class="text-2xl font-semibold text-gray-900 mb-4"></p>
+        <div class="flex gap-2">
+          <input id="ans" type="number" step="any" class="flex-grow border border-gray-300 rounded-md px-3 py-2" placeholder="Your answer">
+          <button id="check" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Check</button>
+        </div>
+        <p id="fb" class="mt-4 min-h-[1.5rem] font-medium"></p>
+        <div class="mt-4 flex justify-between text-sm text-gray-500"><span id="score"></span><button id="next" class="text-blue-600 hover:underline">New problem</button></div>
+      </div>
+    </div>`,
+
+  assignments: () => `
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Assignments</h1>
+    <p class="text-gray-600 mb-8">Tick items off as you finish them.</p>
+    <ul class="max-w-2xl space-y-3">
+      ${ASSIGNMENTS.map(a => `
+        <li class="bg-white rounded-lg border border-gray-200 p-4 flex items-center gap-4">
+          <input type="checkbox" class="w-5 h-5 todo">
+          <div class="flex-grow"><p class="font-semibold text-gray-800">${a[0]}</p><p class="text-sm text-gray-500">${a[1]}</p></div>
+          <span class="text-sm text-gray-600">Due ${a[2]}</span>
+        </li>`).join('')}
+    </ul>`,
+
+  quadratic: () => `
+    <div class="max-w-2xl mx-auto">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">The Quadratic Formula</h1>
+      <p class="text-gray-600 mb-6">For any equation ax² + bx + c = 0 with a ≠ 0:</p>
+      <div class="bg-white rounded-lg border border-gray-200 p-8 mb-6 flex items-center justify-center gap-3 text-3xl" style="font-family:Georgia,serif">
+        <span>x =</span>
+        <span class="inline-flex flex-col items-center"><span class="px-2 pb-1 border-b-2 border-gray-800">−b ± √(b² − 4ac)</span><span class="pt-1">2a</span></span>
+      </div>
+      <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6 text-gray-700 space-y-2">
+        <p><strong>The discriminant</strong> Δ = b² − 4ac tells you the kind of roots before you solve:</p>
+        <p>Δ &gt; 0: two distinct real roots · Δ = 0: one repeated real root · Δ &lt; 0: two complex roots.</p>
+        <details class="pt-2"><summary class="cursor-pointer text-blue-600">Where it comes from (completing the square)</summary>
+          <ol class="list-decimal list-inside space-y-1 mt-2">
+            <li>Start with ax² + bx + c = 0 and divide by a: x² + (b/a)x = −c/a</li>
+            <li>Add (b/2a)² to both sides: (x + b/2a)² = (b² − 4ac) / 4a²</li>
+            <li>Take square roots: x + b/2a = ±√(b² − 4ac) / 2a</li>
+            <li>Subtract b/2a to get the formula.</li>
+          </ol></details>
+      </div>
+      <div class="bg-white rounded-lg border border-gray-200 p-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Solver</h2>
+        <div class="flex flex-wrap items-center gap-2 mb-4">
+          <input id="qa" type="number" value="1" class="w-20 border border-gray-300 rounded-md px-2 py-2"><span>x² +</span>
+          <input id="qb" type="number" value="-3" class="w-20 border border-gray-300 rounded-md px-2 py-2"><span>x +</span>
+          <input id="qc" type="number" value="2" class="w-20 border border-gray-300 rounded-md px-2 py-2"><span>= 0</span>
+          <button id="qsolve" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 ml-2">Solve</button>
+        </div>
+        <div id="qout"></div>
+      </div>
+    </div>`,
+
+  grades: () => {
+    const avg = (GRADES.reduce((s,g)=>s+g[2],0)/GRADES.length).toFixed(1);
+    return `
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Grades</h1>
+    <p class="text-gray-600 mb-8">Current average: <strong>${avg}%</strong></p>
+    <div class="bg-white rounded-lg border border-gray-200 max-w-2xl overflow-hidden">
+      <table class="w-full text-left">
+        <thead class="bg-gray-100 text-gray-600 text-sm"><tr><th class="p-3">Assignment</th><th class="p-3">Course</th><th class="p-3 text-right">Score</th></tr></thead>
+        <tbody>${GRADES.map(g=>`<tr class="border-t border-gray-100"><td class="p-3">${g[0]}</td><td class="p-3 text-gray-600">${g[1]}</td><td class="p-3 text-right font-semibold">${g[2]}%</td></tr>`).join('')}</tbody>
+      </table>
+    </div>`;
+  }
+};
+
+function courseCard(c){
+  return `<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition">
+    <div class="w-12 h-12 bg-${c.c}-100 text-${c.c}-600 rounded-lg flex items-center justify-center mb-4 text-2xl font-bold">${c.s}</div>
+    <h3 class="text-xl font-semibold text-gray-800 mb-2">${c.n}</h3>
+    <p class="text-gray-600 mb-4">${c.d}</p>
+    ${c.p ? `<div class="w-full bg-gray-200 rounded-full h-2 mb-2"><div class="bg-${c.c}-500 h-2 rounded-full" style="width:${c.p}%"></div></div><p class="text-sm text-gray-500 text-right">${c.p}% Complete</p>`
+          : `<a href="#courses" class="block text-center w-full mt-2 bg-gray-100 text-gray-700 py-2 rounded font-medium hover:bg-gray-200 transition">Start Module</a>`}
+  </div>`;
+}
+
+/* ---------- Practice problem generator ---------- */
+const rnd = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
+const SUP = ['','','²','³','⁴','⁵'];
+const sg = n => n<0 ? '−' : '+';
+const TOPICS = [['frac','Grade 5 · Fractions of a number'],['ratio','Grade 6 · Ratios'],['pct','Grade 7 · Percents'],['slope','Grade 8 · Slope'],['algebra','Grade 9 · Linear equations'],['geometry','Grade 10 · Pythagorean theorem'],['quad','Grade 11 · Quadratic roots'],['log','Grade 11 · Logarithms'],['det','Grade 12 · Matrix determinants'],['calculus','Grade 12 · Derivatives'],['integral','Grade 12 · Definite integrals']];
+const GEN = {
+  frac(){ const d=[2,3,4,5,6,8,10][rnd(0,6)], p=rnd(1,d-1), m=rnd(2,9); return {q:`What is ${p}/${d} of ${d*m}?`, a:p*m}; },
+  ratio(){ const a=rnd(2,7), b=rnd(2,9), m=rnd(2,9); return {q:`${a}:${b} = x:${b*m}. Find x.`, a:a*m}; },
+  pct(){ const p=[10,20,25,40,50,75][rnd(0,5)], n=rnd(1,10)*20; return {q:`What is ${p}% of ${n}?`, a:p*n/100}; },
+  slope(){ const m=rnd(-5,5)||2, dx=rnd(1,5), x=rnd(-5,5), y=rnd(-5,5); return {q:`Find the slope of the line through (${x}, ${y}) and (${x+dx}, ${y+m*dx}).`, a:m}; },
+  algebra(){ const a=rnd(2,9), x=rnd(-9,9), b=rnd(-20,20); return {q:`Solve for x:  ${a}x ${sg(b)} ${Math.abs(b)} = ${a*x+b}`, a:x}; },
+  geometry(){ const t=[[3,4,5],[5,12,13],[8,15,17],[7,24,25]][rnd(0,3)], m=rnd(1,3); return {q:`A right triangle has legs ${t[0]*m} and ${t[1]*m}. How long is the hypotenuse?`, a:t[2]*m}; },
+  quad(){ let r,s; do { r=rnd(-6,6); s=rnd(-6,6); } while (r===s || r+s===0);
+    const B=-(r+s), C=r*s; return {q:`Find the larger root of x² ${sg(B)} ${Math.abs(B)}x ${sg(C)} ${Math.abs(C)} = 0`, a:Math.max(r,s)}; },
+  log(){ const b=rnd(2,5), k=rnd(2,4); return {q:`Evaluate log base ${b} of ${Math.pow(b,k)}.`, a:k}; },
+  det(){ const a=rnd(-5,9), b=rnd(-5,9), c=rnd(-5,9), d=rnd(-5,9); return {q:`Find the determinant of the matrix [[${a}, ${b}], [${c}, ${d}]].`, a:a*d-b*c}; },
+  calculus(){ const a=rnd(2,6), n=rnd(2,5), k=rnd(1,3); return {q:`If f(x) = ${a}x${SUP[n]}, find f′(${k}).`, a:a*n*Math.pow(k,n-1)}; },
+  integral(){ const a=rnd(1,4), n=rnd(1,3), k=rnd(1,3); return {q:`Evaluate the integral from 0 to ${k} of ${a*(n+1)}x${SUP[n]} dx.`, a:a*Math.pow(k,n+1)}; }
+};
+let topic='algebra', cur=null, right=0, total=0;
+
+function newProblem(){
+  cur = GEN[topic]();
+  $('q').textContent = cur.q; $('ans').value=''; $('fb').textContent=''; $('ans').focus();
+  $('topic').value = topic;
+  $('score').textContent = `Score: ${right} / ${total}`;
+}
+function checkAnswer(){
+  const v = parseFloat($('ans').value);
+  if (isNaN(v)) return;
+  total++;
+  const ok = v === cur.a;
+  if (ok) right++;
+  $('fb').className = 'mt-4 min-h-[1.5rem] font-medium ' + (ok?'text-green-600':'text-red-600');
+  $('fb').textContent = ok ? 'Correct!' : `Not quite. The answer is ${cur.a}.`;
+  $('score').textContent = `Score: ${right} / ${total}`;
+}
+function initPractice(){
+  $('topic').onchange = e => { topic = e.target.value; newProblem(); };
+  $('check').onclick = checkAnswer;
+  $('next').onclick = newProblem;
+  $('ans').onkeydown = e => { if(e.key==='Enter') checkAnswer(); };
+  newProblem();
+}
+
+/* ---------- Quadratic solver ---------- */
+function initQuad(){
+  const run = () => {
+    const a=+$('qa').value, b=+$('qb').value, c=+$('qc').value, out=$('qout');
+    if (!a) { out.innerHTML = '<p class="text-red-600">a cannot be 0, or the equation is not quadratic.</p>'; return; }
+    const D=b*b-4*a*c, f=n=>+n.toFixed(4), h=-b/(2*a), k=a*h*h+b*h+c;
+    let roots, kind;
+    if (D>0) { const r=Math.sqrt(D); roots=`x₁ = ${f((-b+r)/(2*a))}, x₂ = ${f((-b-r)/(2*a))}`; kind='two distinct real roots'; }
+    else if (D===0) { roots=`x = ${f(h)} (double root)`; kind='one repeated real root'; }
+    else { roots=`x = ${f(h)} ± ${f(Math.sqrt(-D)/(2*Math.abs(a)))}i`; kind='two complex conjugate roots'; }
+    out.innerHTML = `<ol class="list-decimal list-inside space-y-2 text-gray-700">
+      <li>Identify a = ${a}, b = ${b}, c = ${c}.</li>
+      <li>Discriminant: Δ = b² − 4ac = (${b})² − 4(${a})(${c}) = <strong>${D}</strong>, so there are ${kind}.</li>
+      <li>Substitute: x = (−(${b}) ± √${D}) / (2·${a})</li>
+      <li>Roots: <strong>${roots}</strong></li></ol>
+      <div class="mt-4 p-3 bg-gray-50 rounded border border-gray-200 text-sm text-gray-700">
+        Opens ${a>0?'upward':'downward'} · Vertex (${f(h)}, ${f(k)}) · Axis of symmetry x = ${f(h)} · y-intercept ${c}</div>`;
+  };
+  $('qsolve').onclick = run;
+  ['qa','qb','qc'].forEach(id => $(id).onkeydown = e => { if (e.key==='Enter') run(); });
+  run();
+}
+
+/* ---------- Simple hash router ---------- */
+function route(){
+  const page = (location.hash||'#home').slice(1);
+  const name = PAGES[page] ? page : 'home';
+  $('edu-main').innerHTML = PAGES[name]();
+  document.querySelectorAll('#edu-nav a').forEach(a=>a.classList.toggle('active', a.dataset.page===name));
+  document.title = 'Bitbucket Math Academy';
+  if (name==='practice') initPractice();
+  if (name==='quadratic') initQuad();
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange', route);
+
+/* =====================================================
+   ARCADE
+   ===================================================== */
+const CATS = ['Action & Arcade','Puzzle & Strategy','Racing','Retro Classics','Multiplayer','Browser'];
+const GAMES = [
+  ['Quantum Strike','Fast-paced arena shooter.','Action & Arcade','4.8','from-green-600 to-blue-600'],
+  ['Hex Grid Puzzle','Mind-bending spatial challenges.','Puzzle & Strategy','4.5','from-purple-600 to-pink-600'],
+  ['Dungeon Crawler','Classic 8-bit RPG adventure.','Retro Classics','4.9','from-red-600 to-orange-600'],
+  ['Block Builder 3D','Creative sandbox environment.','Multiplayer','4.6','from-teal-500 to-blue-500'],
+  ['Neon Cyber Drift','Cyberpunk street racing.','Racing','4.7','from-blue-700 to-purple-700']
+];
+let cat = CATS[0];
+
+function renderCats(){
+  $('cats').innerHTML = CATS.map(c => `<li><a href="javascript:void(0)" data-c="${c}" class="block px-4 py-2 rounded-md ${c===cat?'bg-blue-600/20 text-blue-400':'hover:bg-gray-800 text-gray-400 hover:text-white'} font-medium transition">${c}</a></li>`).join('');
+  $('cats').querySelectorAll('a').forEach(a => a.onclick = () => { cat = a.dataset.c; renderCats(); renderGameMain(); });
+}
+
+function renderGameMain(){
+  if (cat === 'Browser') return renderBrowser();
+  const list = GAMES.filter(g => g[2] === cat);
+  $('game-main').innerHTML = `
+    <div class="text-xl font-bold text-white mb-4 flex items-center"><span class="w-1 h-6 bg-blue-500 rounded mr-3"></span>${cat}</div>
+    ${list.length ? `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-10">
+      ${list.map(g => `
+        <div class="bg-gray-800 rounded-xl overflow-hidden neon-card border border-gray-700 cursor-pointer">
+          <div class="h-40 bg-gray-700 relative"><div class="absolute inset-0 bg-gradient-to-br ${g[4]} opacity-50"></div></div>
+          <div class="p-4">
+            <h3 class="font-bold text-lg text-white mb-1">${g[0]}</h3>
+            <p class="text-sm text-gray-400 mb-3">${g[1]}</p>
+            <div class="flex justify-between items-center"><span class="text-xs bg-gray-700 px-2 py-1 rounded text-gray-300">${g[2]}</span><span class="text-xs text-yellow-400 font-bold">★ ${g[3]}</span></div>
+          </div>
+        </div>`).join('')}
+    </div>` : `<p class="text-gray-400">No games in this category yet.</p>`}`;
+}
+
+/* ---------- Proxy browser (arcade tab, powered by Scramjet) ---------- */
+function resolveInput(v){
+  v = v.trim(); if (!v) return null;
+  if (/^https?:\/\//i.test(v)) return v;
+  if (!/\s/.test(v) && /^[^\s.]+\.[^\s]{2,}$/.test(v)) return 'https://' + v;
+  return SEARCH_ENGINE.replace('%s', encodeURIComponent(v));
+}
+
+let sj = null, conn = null, frame = null, ready = null;
+
+function ensureProxy(){
+  if (ready) return ready;
+  ready = (async () => {
+    if (typeof $scramjetLoadController === 'undefined' || typeof BareMux === 'undefined')
+      throw new Error('Scramjet files were not found. Open this page from your Scramjet app, not from another site.');
+    if (!('serviceWorker' in navigator))
+      throw new Error('Service workers are not available. The page needs to be on https.');
+    const { ScramjetController } = $scramjetLoadController();
+    sj = new ScramjetController({ files: {
+      wasm: '/scram/scramjet.wasm.wasm', all: '/scram/scramjet.all.js', sync: '/scram/scramjet.sync.js' } });
+    await sj.init();
+    await navigator.serviceWorker.register('/sw.js');
+    await navigator.serviceWorker.ready;
+    conn = new BareMux.BareMuxConnection('/baremux/worker.js');
+    const wisp = (location.protocol === 'https:' ? 'wss' : 'ws') + '://' + location.host + '/wisp/';
+    if ((await conn.getTransport()) !== '/libcurl/index.mjs')
+      await conn.setTransport('/libcurl/index.mjs', [{ websocket: wisp }]);
+  })();
+  ready.catch(() => { ready = null; });
+  return ready;
+}
+
+function renderBrowser(){
+  $('game-main').innerHTML = `
+    <div class="flex flex-col h-full">
+      <form id="pf" class="flex mb-2 bg-gray-800 border border-gray-700 rounded-lg overflow-hidden" autocomplete="off">
+        <input id="pi" class="flex-grow bg-transparent px-4 py-3 outline-none text-white" placeholder="Search or enter a URL">
+        <button class="bg-blue-600 hover:bg-blue-500 px-6 font-semibold">Go</button>
+      </form>
+      <p id="perr" class="text-red-400 text-sm mb-3 min-h-[1.25rem]"></p>
+      <div id="pwrap" class="flex-grow"></div>
+    </div>`;
+  if (frame) $('pwrap').appendChild(frame.frame);
+  $('pf').onsubmit = async e => {
+    e.preventDefault();
+    const u = resolveInput($('pi').value);
+    if (!u) return;
+    $('perr').className = 'text-gray-400 text-sm mb-3 min-h-[1.25rem]';
+    $('perr').textContent = 'Connecting...';
+    try {
+      await ensureProxy();
+      if (!frame) {
+        frame = sj.createFrame();
+        frame.frame.style.cssText = 'border:0;width:100%;min-height:70vh;border-radius:8px;background:#fff';
+      }
+      if (!frame.frame.isConnected) $('pwrap').appendChild(frame.frame);
+      frame.go(u);
+      $('perr').textContent = '';
+    } catch (err) {
+      $('perr').className = 'text-red-400 text-sm mb-3 min-h-[1.25rem]';
+      $('perr').textContent = 'Proxy error: ' + (err && err.message ? err.message : err);
+    }
+  };
+}
+
+/* =====================================================
+   Ctrl+E toggle
+   ===================================================== */
+document.addEventListener('DOMContentLoaded', () => {
+  route(); renderCats(); renderGameMain();
+  const edu = $('edu-view'), game = $('game-view');
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key.toLowerCase() === 'e') {
+      e.preventDefault();
+      const toGame = !edu.classList.contains('hidden');
+      edu.classList.toggle('hidden', toGame);
+      game.classList.toggle('hidden', !toGame);
+      document.body.classList.toggle('bg-gray-50', !toGame);
+      document.body.classList.toggle('bg-gray-900', toGame);
+      document.title = 'Bitbucket Math Academy';
+    }
+  });
+});
+</script>
+</body>
+</html>
